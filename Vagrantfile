@@ -4,7 +4,6 @@ base_ip = "10.0.0."
 subnet = "10.244.0.0/16"
 kubernetes_version = "stable-1.14"
 token = "kube00.0000000000000000"
-# http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/overview?namespace=default
 Vagrant.configure("2") do |config|
 
   config.vm.box = "ubuntu/bionic64"
@@ -14,7 +13,7 @@ Vagrant.configure("2") do |config|
     v.cpus = 2
   end
 
-  (0..2).each do |i| 
+  (0..3).each do |i| 
     name = "kube" + i.to_s
     address = base_ip + (i + 2).to_s
   
@@ -29,6 +28,8 @@ Vagrant.configure("2") do |config|
         " --token #{token}\n"
         node.vm.provision "shell", path: "install-networking.sh"
         node.vm.provision "shell", path: "install-dashboard.sh"
+        node.vm.synced_folder ".", "/mnt/shared"
+        node.vm.provision "shell", inline: "cp /etc/kubernetes/admin.conf /mnt/shared/config"
        else
          first_address = base_ip + "2"
          node.vm.provision "shell", inline: "kubeadm join" +
