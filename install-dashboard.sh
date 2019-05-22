@@ -3,7 +3,7 @@
 # Install Kubernetes Dashboard
 # http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/overview?namespace=default
 export KUBECONFIG=/etc/kubernetes/admin.conf
-sudo apt install -y jq
+sudo apt-get install -y jq
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml
 
 # Create admin account for accessing kubernetes dashboard
