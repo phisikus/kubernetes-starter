@@ -1,12 +1,18 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 base_ip = "10.0.0."
-subnet = "10.0.1.0/24"
+subnet = "10.244.0.0/16"
 kubernetes_version = "stable-1.14"
 token = "kube00.0000000000000000"
+# http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/overview?namespace=default
 Vagrant.configure("2") do |config|
+
   config.vm.box = "ubuntu/bionic64"
   config.vm.provision "shell", path: "install-k8s.sh"
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 2048
+    v.cpus = 2
+  end
 
   (0..2).each do |i| 
     name = "kube" + i.to_s
@@ -21,9 +27,8 @@ Vagrant.configure("2") do |config|
         " --apiserver-advertise-address=#{address}" +
         " --pod-network-cidr=#{subnet}" + 
         " --token #{token}\n"
-        node.vm.provision "shell", inline: "
-        export KUBECONFIG=/etc/kubernetes/admin.conf
-        kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter.yaml"        
+        node.vm.provision "shell", path: "install-networking.sh"
+        node.vm.provision "shell", path: "install-dashboard.sh"
        else
          first_address = base_ip + "2"
          node.vm.provision "shell", inline: "kubeadm join" +
