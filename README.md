@@ -8,7 +8,15 @@ vagrant up
 ## How does it work?
 The Vagrantfile contains definition of ubuntu-based VMs where the first VM (named kube0) is provisioned as master node that initializes kubernetes cluster. Subsequent machines (named kube1, kube2 ...) also start from the same base image but use common token to join existing cluster.
 By default the local directory is shared with master node and kubernetes _config_ file will be created so you can put it in _~/.kube/config_ and use tools such as kubectl.
-
+```bash
+-> copy config ~/.kube/config
+-> kubectl get nodes
+NAME    STATUS   ROLES    AGE     VERSION
+kube0   Ready    master   7m26s   v1.14.2
+kube1   Ready    <none>   5m23s   v1.14.2
+kube2   Ready    <none>   3m14s   v1.14.2
+kube3   Ready    <none>   62s     v1.14.2
+```
 
 ## What else do i get?
 After initialization of the base kubernetes, additional plugins are installed such as flannel networking layer and Dashboard UI.
