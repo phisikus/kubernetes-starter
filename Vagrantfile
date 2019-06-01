@@ -24,6 +24,10 @@ def join_cluster(node)
   " #{first_address}:6443 --token #{$token} --discovery-token-unsafe-skip-ca-verification\n"
 end
 
+def set_kubelet_address(node, address)
+  config_file = "/etc/systemd/system/kubelet.service.d/10-kubeadm.conf"
+  node.vm.provision "shell", inline: "echo \'Environment=\"KUBELET_EXTRA_ARGS=--node-ip=#{address}\"' >> " + config_file
+end
 
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/bionic64"
@@ -40,6 +44,7 @@ Vagrant.configure("2") do |config|
     config.vm.define name do |node|
       node.vm.hostname = name
       node.vm.network "private_network", ip: address
+      set_kubelet_address(node, address)
       if i == 0
         init_cluster(node, address)  
       else
