@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 $base_ip = "10.0.0."
 $subnet = "10.244.0.0/16"
-$kubernetes_version = "stable-1.14"
+$kubernetes_version = "stable-1.15"
 $token = "kube00.0000000000000000"
 $count = 4
 
