@@ -4,7 +4,7 @@
 # http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/overview?namespace=default
 export KUBECONFIG=/etc/kubernetes/admin.conf
 sudo apt-get install -y jq
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
 
 # Create admin account for accessing kubernetes dashboard
 kubectl create -n kube-system serviceaccount admin
