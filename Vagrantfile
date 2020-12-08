@@ -2,9 +2,9 @@
 # vi: set ft=ruby :
 $base_ip = "10.0.0."
 $subnet = "10.244.0.0/16"
-$kubernetes_version = "stable-1.19"
+$kubernetes_version = "stable-1.20"
 $token = "kube00.0000000000000000"
-$count = 4
+$count = 1 
 
 def init_cluster(node, address)
   node.vm.provision "shell", inline: "kubeadm init" + 
