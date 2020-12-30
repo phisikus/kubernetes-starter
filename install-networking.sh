@@ -8,3 +8,4 @@ cat kube-flannel.yml | sed 's/--kube-subnet-mgr/--kube-subnet-mgr\n        - --i
 rm kube-flannel.yml
 kubectl apply -f flannel.yml
 kubectl taint nodes --all node-role.kubernetes.io/master-
+rm flannel.yml

@@ -4,7 +4,7 @@ $base_ip = "10.0.0."
 $subnet = "10.244.0.0/16"
 $kubernetes_version = "stable-1.20"
 $token = "kube00.0000000000000000"
-$count = 2
+$count = 3
 
 def init_cluster(node, address)
   node.vm.provision "shell", inline: "kubeadm init" + 
@@ -14,7 +14,7 @@ def init_cluster(node, address)
   " --token #{$token}\n"
   node.vm.provision "shell", path: "install-networking.sh"
   node.vm.provision "shell", path: "install-dashboard.sh"
-  node.vm.synced_folder ".", "/mnt/shared"
+  node.vm.provision "shell", path: "install-storage.sh"
   node.vm.provision "shell", inline: "cp /etc/kubernetes/admin.conf /mnt/shared/config"
 end
 
@@ -44,6 +44,7 @@ Vagrant.configure("2") do |config|
     config.vm.define name do |node|
       node.vm.hostname = name
       node.vm.network "private_network", ip: address
+      node.vm.synced_folder ".", "/mnt/shared"
       set_kubelet_address(node, address)
       if i == 0
         init_cluster(node, address)  

@@ -17,10 +17,10 @@ kube1   Ready    <none>   5m23s   v1.14.2
 kube2   Ready    <none>   3m14s   v1.14.2
 kube3   Ready    <none>   62s     v1.14.2
 ```
-By default 4 nodes are created but you can adjust that number in the Vagrantfile (using _count_ variable).
+By default 3 nodes are created but you can adjust that number in the Vagrantfile (using _count_ variable).
 
 ## What else do I get?
-After initialization of the base kubernetes, additional plugins are installed such as flannel networking layer and Dashboard UI.
+After initialization of the base kubernetes, additional plugins are installed such as flannel networking layer, storage volume based on shared directory and Dashboard UI.
 For security reasons the script creates separate account for accessing the Dashboard and you can find authentication token in the provisioning log of the master node (the log line starts with "Admin token for dashboard:").
 Make sure that you have access to the cluster from your local terminal by using config file (as described previously) and set up proxy:
 ```bash
