@@ -1,0 +1,105 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  labels:
+    app: mongo
+spec:
+  clusterIP: None
+  selector:
+    app: mongo
+  ports:
+    - name: mongo
+      port: 27017
+      targetPort: 27017
+    - name: mongo-config
+      port: 27019
+      targetPort: 27019
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: storage-1
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/shared/storage/1"
+
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: storage-2
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/shared/storage/2"
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: storage-3
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/shared/storage/3"
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  serviceName: mongo
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo-container
+        image: mongo
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: admin
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: admin
+        ports:
+        - name: mongo
+          containerPort: 27017
+          protocol: TCP
+        - name: mongo-config
+          containerPort: 27019
+        volumeMounts:
+        - name: data
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+
+# kubectl run -it srvlookup --image=tutum/dnsutils --rm --restart=Never -- dig SRV mongo.default.svc.cluster.local
+# mongo --host mongo-1.mongo --username admin --password admin
