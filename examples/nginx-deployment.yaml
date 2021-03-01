@@ -34,6 +34,12 @@ spec:
           volumeMounts:
           - name: nginx-index
             mountPath: /app/
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: 80
+            initialDelaySeconds: 5
       volumes:
         - name: nginx-index
           configMap:
